@@ -1,7 +1,7 @@
-// lib/widgets/animated_side_menu.dart
 import 'package:flutter/material.dart';
 import '../models/menu_item.dart';
 import '../utils/icon_mapping.dart';
+import '../utils/animation_controller.dart';
 
 class AnimatedSideMenu extends StatefulWidget {
   final List<MenuItem> menuItems;
@@ -15,19 +15,13 @@ class AnimatedSideMenu extends StatefulWidget {
 
 class _AnimatedSideMenuState extends State<AnimatedSideMenu>
     with SingleTickerProviderStateMixin {
-  bool _isExpanded = true;
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+  final CustomAnimationController _animationController =
+      CustomAnimationController();
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
-    _animationController.forward();
+    _animationController.init(this);
   }
 
   @override
@@ -39,7 +33,7 @@ class _AnimatedSideMenuState extends State<AnimatedSideMenu>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animation,
+      animation: _animationController.animation,
       builder: (context, child) {
         return Drawer(
           child: SingleChildScrollView(

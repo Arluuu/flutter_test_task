@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/menu_item.dart';
+import '../utils/animation_controller.dart';
 
 class SideMenu extends StatefulWidget {
   final List<MenuItem> menuItems;
@@ -14,17 +15,13 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = true;
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+  final CustomAnimationController _animationController =
+      CustomAnimationController();
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 300),
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
+    _animationController.init(this);
   }
 
   @override
@@ -47,7 +44,7 @@ class _SideMenuState extends State<SideMenu>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _animation,
+      animation: _animationController.animation,
       builder: (context, child) {
         return Drawer(
           child: Column(
